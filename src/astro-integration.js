@@ -15,9 +15,11 @@ export default function() {
 
         const hasReact = config.vite?.plugins?.some(
           (p) => p && (p.name === 'vite:react-babel' || p.name === 'vite:react-jsx')
+        ) || config.integrations?.some(
+          (i) => i.name === '@astrojs/react'
         );
 
-        if (command === 'dev') {
+        if (command === 'dev' && !hasReact) {
           injectScript('before-hydration', `
             window.$RefreshReg$ = window.$RefreshReg$ || (() => {});
             window.$RefreshSig$ = window.$RefreshSig$ || (() => (type) => type);
