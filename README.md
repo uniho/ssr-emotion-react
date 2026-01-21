@@ -235,7 +235,7 @@ export const styled = (Tag, options) => (style, ...values) => props => {
   const makeClassName = (style, ...values) =>
     typeof style == 'function' ? makeClassName(style(props)) : css(style, ...values);
  
-  const {sx, 'class': _class, children, ...wosx} = props;
+  const {sx, className, 'class': _class, children, ...wosx} = props;
 
   Object.keys(wosx).forEach(key => {
     if (options && options.shouldForwardProp && !options.shouldForwardProp(key)) {
@@ -245,7 +245,7 @@ export const styled = (Tag, options) => (style, ...values) => props => {
 
   const newProps = {
     ...wosx,
-    'class': cx(makeClassName(style, ...values), makeClassName(sx), _class),
+    className: cx(makeClassName(style, ...values), makeClassName(sx), _class, className),
   };
 
   return (<Tag {...newProps}>{children}</Tag>);
