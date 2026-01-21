@@ -1,0 +1,60 @@
+{
+  "name": "ssr-emotion-react",
+  "version": "1.0.0-beta.0",
+  "description": "A natural and powerful Zero-Runtime CSS-in-JS solution for React",
+  "author": "uniho",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "ssr",
+    "emotion",
+    "astro",
+    "css-in-js",
+    "react"
+  ],
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./astro": {
+      "types": "./dist/type.d.ts",
+      "import": "./dist/astro-integration.js"
+    },
+    "./astro/render": {
+      "types": "./dist/type.d.ts",
+      "import": "./dist/astro-render.js"
+    },
+    "./astro/client": {
+      "types": "./dist/type.d.ts",
+      "import": "./dist/astro-client.js"
+    }
+  },
+  "scripts": {
+    "build": "node ./scripts/cleanup.mjs && node ./scripts/build.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uniho/ssr-emotion-react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/uniho/ssr-emotion-react/issues"
+  },
+  "dependencies": {
+    "@emotion/css": "^11.13.5",
+    "@emotion/server": "^11.11.0",
+    "@vitejs/plugin-react": "^5.1.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "peerDependencies": {
+    "astro": ">=5.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  }
+}

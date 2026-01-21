@@ -1,0 +1,14 @@
+node_modules
+.cache
+dist
+lib
+*.log
+reference
+.DS_Store
+src/*/.*
+*.tgz
+*.tar.gz
+
+# editor specific files
+.vscode
+package-lock.json
