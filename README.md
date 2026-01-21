@@ -1,6 +1,6 @@
 # SSR [Emotion](https://emotion.sh/docs/@emotion/css) React
 
-A natural and powerful Zero-Runtime CSS-in-JS solution as se React.
+A natural and powerful Zero-Runtime CSS-in-JS solution et ses React 🍅
 
 ## LIVE DEMO with Astro
 
