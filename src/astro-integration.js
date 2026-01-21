@@ -28,7 +28,7 @@ export default function() {
 
         updateConfig({
           vite: {
-            plugins: hasReact ? [] : [react({ fastRefresh: false })],
+            plugins: hasReact ? [] : [react()],
             ssr: {
               external: ['@emotion/css', '@emotion/server']
             }
