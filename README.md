@@ -99,7 +99,7 @@ In Astro, Island components (`client:*`) get the best of both worlds.
 
 ### Why this is powerful
 
-Because the Emotion runtime remains active inside Islands, you can use standard React/Preact patterns to handle dynamic styles without any special APIs.
+Because the Emotion runtime remains active inside Islands, you can use standard React patterns to handle dynamic styles without any special APIs.
 
 ### Example: Hydration-aware Styling
 
