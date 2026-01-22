@@ -36,8 +36,8 @@ export default async ({ dir, pages }, config) => {
 
     if (!combinedCss) continue;
 
-    const randomId = crypto.randomBytes(4).toString('hex');
-    const fileName = `${assetsDir}/ssremo.${randomId}.css`;
+    const hash = crypto.createHash('md5').update(combinedCss).digest('hex').slice(0, 10);
+    const fileName = `${assetsDir}/ssremo.${hash}.css`;
     const finalPath = path.join(outDir, fileName);
 
     if (!fs.existsSync(path.dirname(finalPath))) {
