@@ -56,10 +56,8 @@ While developing [Potate](https://github.com/uniho/potate), I discovered a way t
 
 * **Zero Runtime by default:** No `Emotion` library is shipped to the browser. It delivers a pure Zero-JS experience.
 * **Familiar DX:** Use the full expressive power of the [Emotion `css()` function](https://emotion.sh/docs/@emotion/css) that you already know.
-* **No Hydration Mismatch:** By adopting the Potate-born "Full DOM Replacement" strategy, it physically eliminates the dreaded React hydration errors.
-* **Static by Default:** Styles are automatically extracted into static CSS during the Astro build process.
-* **Performance:** No hydration overhead for styles and no Flash of Unstyled Content (FOUC).
-
+* **Static CSS Assets with Cache Busting:** All styles are extracted into static `.css` files with random-hash filenames, ensuring maximum delivery speed via browser caching.
+* **Pure Performance:** No Emotion library or hydration overhead is shipped for static regions. You get a zero-JS experience by default, while interactive Islands remain fully dynamic without flickering.
 
 ## 🛠 How it looks
 

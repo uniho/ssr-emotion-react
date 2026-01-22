@@ -1,8 +1,12 @@
 // astro-integration.js
 
 import react from '@vitejs/plugin-react';
+import buildDone from './astro-build-done.js';
 
 export default function() {
+  
+  let saveConfig = null;
+  
   return {
     name: 'ssr-emotion-react',
     hooks: {
@@ -12,6 +16,8 @@ export default function() {
           serverEntrypoint: 'ssr-emotion-react/astro/render',
           clientEntrypoint: 'ssr-emotion-react/astro/client',
         });
+
+        saveConfig = config;
 
         const hasReact = config.vite?.plugins?.some(
           (p) => p && (p.name === 'vite:react-babel' || p.name === 'vite:react-jsx')
@@ -35,6 +41,8 @@ export default function() {
           },
         });
       },
+
+      'astro:build:done': async (options) => await buildDone(options, saveConfig),
     },
   };
 }

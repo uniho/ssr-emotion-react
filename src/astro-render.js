@@ -18,12 +18,8 @@ export default {
       : null;
 
     const html = renderToString(React.createElement(Component, props, children));
-    const { ids, css } = extractCritical(html);
-
-    const styleTag = `<style data-emotion="css ${ids.join(' ')}">${css}</style>`;
-
-    return {
-      html: `${styleTag}${html}`,
-    };
+    const { css } = extractCritical(html);
+    const style = css ? `<style data-ssr-emotion">${css}</style>` : '';
+    return { html: html + style };
   },
 };
