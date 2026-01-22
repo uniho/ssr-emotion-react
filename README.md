@@ -56,8 +56,9 @@ While developing [Potate](https://github.com/uniho/potate), I discovered a way t
 
 * **Zero Runtime by default:** No `Emotion` library is shipped to the browser. It delivers a pure Zero-JS experience.
 * **Familiar DX:** Use the full expressive power of the [Emotion `css()` function](https://emotion.sh/docs/@emotion/css) that you already know.
-* **Static CSS Assets with Cache Busting:** All styles are extracted into static `.css` files with random-hash filenames, ensuring maximum delivery speed via browser caching.
-* **Pure Performance:** No Emotion library or hydration overhead is shipped for static regions. You get a zero-JS experience by default, while interactive Islands remain fully dynamic without flickering.
+* **Decoupled Asset Delivery:** Styles are moved to separate `.css` files to allow for flexible cache strategies. By using unique filenames (cache busting), we ensure that updates are immediately reflected even when long-term caching is enabled on the server.
+* **Hydration Stability:** No overhead for style re-calculation. Interactive Islands remain stable and fully dynamic without visual flickering during the hydration process.
+
 
 ## 🛠 How it looks
 
