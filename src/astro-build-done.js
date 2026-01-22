@@ -5,8 +5,9 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { Window } from 'happy-dom';
+import pc from 'picocolors';
 
-export default async ({ dir, pages }, config) => {
+export default async ({ dir, pages, logger }, config) => {
   const outDir = fileURLToPath(dir);
   const assetsDir = config.build?.assets || '_astro';
   let count = 0;
@@ -51,7 +52,7 @@ export default async ({ dir, pages }, config) => {
     link.href = `/${config.base}/${fileName}`.replace(/\/+/g, '/');
     document.head.appendChild(link);
 
-    console.log(`[SSR Emotion] ${link.href}`);
+    logger.info(`Link ${pc.cyan(link.href)} from ${pc.magenta('/' + page.pathname)}`);
     count++;
 
     fs.writeFileSync(htmlPath, '<!DOCTYPE html>\n' + document.documentElement.outerHTML);
