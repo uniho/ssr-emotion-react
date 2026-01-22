@@ -9,7 +9,6 @@ import { Window } from 'happy-dom';
 export default async ({ dir, pages }, config) => {
   const outDir = fileURLToPath(dir);
   const assetsDir = config.build?.assets || '_astro';
-  const base = config.base === '/' ? '' : config.base;
   let count = 0;
 
   for (const page of pages) {
@@ -49,7 +48,7 @@ export default async ({ dir, pages }, config) => {
     
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = `${base}/${fileName}`;
+    link.href = `/${config.base}/${fileName}`.replace(/\/+/g, '/');
     document.head.appendChild(link);
 
     console.log(`[SSR Emotion] ${link.href}`);
