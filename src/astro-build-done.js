@@ -7,19 +7,29 @@ import { fileURLToPath } from 'node:url';
 import { Window } from 'happy-dom';
 import pc from 'picocolors';
 
-export default async ({ dir, pages, logger }, config) => {
+const getAllHtmlFiles = (dirPath, arrayOfFiles = []) => {
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach(file => {
+    const fullPath = path.join(dirPath, file);
+    if (fs.statSync(fullPath).isDirectory()) {
+      getAllHtmlFiles(fullPath, arrayOfFiles);
+    } else if (fullPath.endsWith('.html')) {
+      arrayOfFiles.push(fullPath);
+    }
+  });
+
+  return arrayOfFiles;
+};
+
+export default async ({ dir, logger }, config) => {
   const outDir = fileURLToPath(dir);
   const assetsDir = config.build?.assets || '_astro';
   let count = 0;
 
-  for (const page of pages) {
-    let htmlPath = path.join(outDir, page.pathname, 'index.html');
-    if (!fs.existsSync(htmlPath)) {
-      const fallbackPath = path.join(outDir, page.pathname + '.html');
-      if (!fs.existsSync(fallbackPath)) continue;
-      htmlPath = fallbackPath;
-    }
+  const htmlFiles = getAllHtmlFiles(outDir);
 
+  for (const htmlPath of htmlFiles) {
     const rawHtml = fs.readFileSync(htmlPath, 'utf-8');
     const window = new Window();
     const document = window.document;
@@ -52,7 +62,7 @@ export default async ({ dir, pages, logger }, config) => {
     link.href = `/${config.base}/${fileName}`.replace(/\/+/g, '/');
     document.head.appendChild(link);
 
-    logger.info(`Link ${pc.cyan(link.href)} from ${pc.magenta('/' + page.pathname)}`);
+    logger.info(`Link ${pc.cyan(fileName)} from ${pc.magenta(path.relative(outDir, htmlPath))}`);
     count++;
 
     fs.writeFileSync(htmlPath, '<!DOCTYPE html>\n' + document.documentElement.outerHTML);
