@@ -285,8 +285,15 @@ const sx = (props, ...styles) => {
 
 export default sx;
 
+// Factory for component-scoped sx functions
+sx._factory = (genCSS) => {
+  const f = (props, ...styles) => sx(props, ...styles, genCSS);
+  f.css = (...styles) => f({}, ...styles); // Styles-only function when you don't need props
+  return f;
+}
+
 // My button style
-sx.button = (props, ...styles) => sx(props, ...styles, props => {
+sx.button = sx._factory(props => {
   const style = {
     // default is text button
     padding: '8px 16px',
@@ -327,9 +334,10 @@ import sx from './the-sx-prop'
 export default props => {
   return (<>
   <button {...sx.button({}, {margin: '1rem'})}>Buuton1</button>
+  <button {...sx.button.css({margin: '1rem'})}>Buuton1</button>
   <button {...sx.button({$elevated: true}, {margin: '1rem'})}>Button2</button>
   <div {...sx.button({$elevated: true}, {margin: '1rem'})}>Button3</div>
-  <button disabled {...sx.button({}, {margin: '1rem'})}>Button4</button>
+  <button disabled {...sx.button.css({margin: '1rem'})}>Button4</button>
   <button {...sx.button({disabled: true}, {margin: '1rem'})}>Button5</button>
   </>);
 }
