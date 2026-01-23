@@ -2,10 +2,6 @@
 
 A natural and powerful Zero-Runtime CSS-in-JS solution et ses React 🍅
 
-## LIVE DEMO with Astro
-
-準備中...
-
 ## Installation
 
 ### 🚀 Astro
