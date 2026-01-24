@@ -1,6 +1,6 @@
 {
   "name": "ssr-emotion-react",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0",
   "description": "A natural and powerful Zero-Runtime CSS-in-JS solution for React",
   "author": "uniho",
   "license": "MIT",
