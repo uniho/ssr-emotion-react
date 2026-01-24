@@ -327,7 +327,7 @@ sx.button = sx._factory(props => {
 ```
 
 ```jsx
-import sx from './the-sx-prop'
+import {sx} from './the-sx-prop'
 
 export default props => {
   return (<>
@@ -366,7 +366,6 @@ sx.ul = sx._factory(props => ({
       width: 1.5rem;
       left: 0; top: 0;
       text-align: center;
-      padding-right: .5rem; */
     }
     & + li, & > ul {
       margin-top: .25rem;
