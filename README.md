@@ -230,7 +230,7 @@ export const styled = (Tag) => (style, ...values) => props => {
   const makeClassName = (style, ...values) =>
     typeof style == 'function' ? makeClassName(style(props)) : css(style, ...values);
  
-  const {sx, className, 'class': _class, children, ...wosx} = props;
+  const {as: As, sx, className, 'class': _class, children, ...wosx} = props;
 
   // cleanup transient props
   Object.keys(wosx).forEach(key => {
@@ -242,7 +242,8 @@ export const styled = (Tag) => (style, ...values) => props => {
     className: cx(makeClassName(style, ...values), makeClassName(sx), _class, className),
   };
 
-  return (<Tag {...newProps}>{children}</Tag>);
+  const T = As || Tag;
+  return (<T {...newProps}>{children}</T>);
 };
 
 ```
@@ -251,7 +252,8 @@ What is the sx prop? For those unfamiliar with libraries like [MUI, the sx prop]
 
 In this implementation, you can pass raw style objects to the sx prop without wrapping them in `css()` or "The Patterns" functions.
 
-However, since the underlying tag of a button is not always `<button>`, and because using something like `createElement()` locally is generally not recommended, I personally prefer the approach shown below. In any case, how you choose to implement this is entirely up to you.
+However, defining a `styled` component inside a render function is **a pitfall** because it creates a new component identity every time, forcing React to re-mount.
+I personally prefer the approach shown below. In any case, how you choose to implement this is entirely up to you.
 
 ```js
 // the-sx-prop.js
@@ -339,6 +341,35 @@ export default props => {
 }
 
 ```
+
+Too complex? Don't worry. The following pattern is more than enough. The goal is to show that with a little creativity, you can build any styling engine you want!
+
+```js
+// the-poly.js
+
+import {css, cx} from '@emotion/css'
+
+export default ({as: Tag = 'div', sx, className, children, ...props}) => {
+  const newProps = {...props};    
+  newProps.className = cx(css(sx), className);
+  return <Tag {...newProps}>{children}</Tag>;
+};
+
+```
+
+```jsx
+import P from './the-poly'
+
+const MyComponent = props => {
+  return (
+  <P as="section" sx={{ padding: '20px', border: '1px solid #ccc' }}>
+    Flexible? Dynamic? Polymorphic? It's all of them!
+  </P>
+  )
+}
+
+```
+
 
 ## 🚫 Won't Do
 
