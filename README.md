@@ -256,16 +256,18 @@ However, defining a `styled` component inside a render function is **a pitfall**
 I personally prefer the approach shown below. In any case, how you choose to implement this is entirely up to you.
 
 ```js
-// the-sx-prop.js
+// the-sx-prop.jsx
 
 import {css, cx} from '@emotion/css'
 
-const sx = (props, ...styles) => {
-  const result = typeof props === 'object' ? {...props} : {};
+export const sx = (props, ...styles) => {
+  let result = typeof props === 'object' ? {...props} : {};
   const _css = [];
   for (let arg of styles) {
     if (typeof arg === 'function') {
-      _css.push(arg(result));
+      const p = arg(result);
+      if (p && typeof props === 'object') Object.assign(result, p);
+      _css.push(p?.$css);
     } else if (arg) {
       _css.push(arg);
     }
@@ -281,11 +283,9 @@ const sx = (props, ...styles) => {
   return result;
 }
 
-export default sx;
-
 // Factory for component-scoped sx functions
 sx._factory = (genCSS) => {
-  const f = (props, ...styles) => sx(props, ...styles, genCSS);
+  const f = (props, ...styles) => sx(props || {}, ...styles, genCSS);
   f.css = (...styles) => f({}, ...styles); // Styles-only function when you don't need props
   return f;
 }
@@ -310,7 +310,7 @@ sx.button = sx._factory(props => {
     style.boxShadow = 'var(--style-shadows-level1)';
   }
 
-  return [
+  return {$css: [
     css`
       line-height: 1;
       display: inline-flex;
@@ -321,7 +321,7 @@ sx.button = sx._factory(props => {
       }
     `,
     style,
-  ];
+  ]};
 });
 
 ```
@@ -342,30 +342,54 @@ export default props => {
 
 ```
 
-Too complex? Don't worry. The following pattern is more than enough. The goal is to show that with a little creativity, you can build any styling engine you want!
+Furthermore, by creating a component like the one below, you evolve into a **Super Saiyan** (for those who aren't familiar, it's like a classic Superman).
 
 ```js
-// the-adhoc.js
+// the-sx-prop.jsx
 
-import {css, cx} from '@emotion/css'
+:
+:
 
-export default ({as: Tag = 'div', sx, className, children, ...props}) => {
-  const newProps = {...props};    
-  newProps.className = cx(css(sx), className);
-  return <Tag {...newProps}>{children}</Tag>;
-};
+export const As = ({as: Tag = 'div', children, ...props}) => <Tag {...props}>{children}</Tag>;
+
+// My list style
+sx.ul = sx._factory(props => ({
+  as: 'ul',
+  $css: css`
+  & > li {
+    position: relative;
+    padding-left: 1.5rem;
+
+    &:before {
+      content: "\\2022";
+      position: absolute;
+      width: 1.5rem;
+      left: 0; top: 0;
+      text-align: center;
+      padding-right: .5rem; */
+    }
+    & + li, & > ul {
+      margin-top: .25rem;
+    }
+  }
+  & > ul {
+    margin-left: 1rem;
+  }
+`}));
 
 ```
 
 ```jsx
-import Adhoc from './the-adhoc'
+import {sx, As} from './the-sx-prop'
 
 const MyComponent = props => {
   return (
-  <Adhoc as="section" sx={{ padding: '20px', border: '1px solid #ccc' }}>
-    Is it Flexible? Is it Dynamic? Is it Polymorphic?
-    No, it's <strong>Adhoc</strong>!
-  </Adhoc>
+  <As {...sx.ul.css({ padding: '20px', border: '1px solid #ccc' })}>
+    <li>Is it Flexible?</li>
+    <li>Is it Dynamic?</li>
+    <li>Is it Polymorphic?</li>
+    <li>No, it's <strong>As</strong>!</li>
+  </As>
   )
 }
 
