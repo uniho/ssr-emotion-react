@@ -345,7 +345,7 @@ export default props => {
 Too complex? Don't worry. The following pattern is more than enough. The goal is to show that with a little creativity, you can build any styling engine you want!
 
 ```js
-// the-poly.js
+// the-adhoc.js
 
 import {css, cx} from '@emotion/css'
 
@@ -358,13 +358,14 @@ export default ({as: Tag = 'div', sx, className, children, ...props}) => {
 ```
 
 ```jsx
-import P from './the-poly'
+import Adhoc from './the-adhoc'
 
 const MyComponent = props => {
   return (
-  <P as="section" sx={{ padding: '20px', border: '1px solid #ccc' }}>
-    Flexible? Dynamic? Polymorphic? It's all of them!
-  </P>
+  <Adhoc as="section" sx={{ padding: '20px', border: '1px solid #ccc' }}>
+    Is it Flexible? Is it Dynamic? Is it Polymorphic?
+    No, it's <strong>Adhoc</strong>!
+  </Adhoc>
   )
 }
 
