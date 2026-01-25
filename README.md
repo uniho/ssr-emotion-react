@@ -280,7 +280,8 @@ export const sx = (props, style, ...values) => {
 // Factory for component-scoped sx functions (adds `.css()` automatically)
 sx._factory = (genCSS) => {
   const f = (props, ...styles) => sx(props || {}, genCSS, ...styles);
-  f.css = (...styles) => f({}, ...styles);
+  f.css = (...styles) => f({}, ...styles); // style only
+  f.curry = (props) => (...values) => f(props || {}, ...values); // currying
   return f;
 }
 
