@@ -260,20 +260,14 @@ I personally prefer the approach shown below. In any case, how you choose to imp
 
 import {css, cx} from '@emotion/css'
 
-export const sx = (props, ...styles) => {
-  let result = typeof props === 'object' ? {...props} : {};
-  const _css = [];
-  for (let arg of styles) {
-    if (typeof arg === 'function') {
-      const p = arg(result);
-      if (p && typeof props === 'object') Object.assign(result, p);
-      if (p?.$css) _css.push(p.$css);
-    } else if (arg) {
-      _css.push(arg);
-    }
+export const sx = (props, style, ...values) => {
+  let result = (props && typeof props === 'object' ? props : {});
+  if (typeof style === 'function') {
+    result = {...style(result), ...result};
+    result.className = cx(css(result?.$css, ...values), result.className);
+  } else {
+    result.className = cx(css(style, ...values), result.className);
   }
-
-  result.className = cx(css(_css), result.className);
 
   // cleanup transient props
   Object.keys(result).forEach(key => {
@@ -283,10 +277,10 @@ export const sx = (props, ...styles) => {
   return result;
 }
 
-// Factory for component-scoped sx functions
+// Factory for component-scoped sx functions (adds `.css()` automatically)
 sx._factory = (genCSS) => {
-  const f = (props, ...styles) => sx(props || {}, ...styles, genCSS);
-  f.css = (...styles) => f({}, ...styles); // Styles-only function when you don't need props
+  const f = (props, ...styles) => sx(props || {}, genCSS, ...styles);
+  f.css = (...styles) => f({}, ...styles);
   return f;
 }
 
