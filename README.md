@@ -267,7 +267,7 @@ export const sx = (props, ...styles) => {
     if (typeof arg === 'function') {
       const p = arg(result);
       if (p && typeof props === 'object') Object.assign(result, p);
-      _css.push(p?.$css);
+      if (p?.$css) _css.push(p.$css);
     } else if (arg) {
       _css.push(arg);
     }
