@@ -36,7 +36,8 @@ Now, you can use not only Astro components (`.astro`) but also React JSX compone
 > **Note:** React JSX components in Astro Islands
 >
 > * **No directive (Server Only)**: Rendered as just static HTML tags. It results in zero client-side JavaScript. (I used to think there wasn't much point in writing static content in JSX components instead of just using Astro components. It seemed like standard Astro components was more than enough. **However, I've realized one major advantage:** SSR Emotion — the ultimate SSR Zero-Runtime CSS-in-JS solution, seamlessly integrated with Astro. By using React JSX components, your styles are automatically extracted into static CSS during the build process. This means you can enjoy the full power of CSS-in-JS while still shipping zero bytes of JS to the browser. In this regard, it's a significant upgrade over standard Astro components.)
-> * `client:only="react"` **(Client Only)**: This is the mode where the relationship between React and Astro is the clearest. It skips server-side rendering and runs entirely in the browser.
+>
+> * `client:only="react"` **(Client Only)**: As you know, this is the standard mode where Emotion is used, and this plugin does nothing. It skips server-side rendering and runs entirely in the browser.
 >
 > * `client:load`(and others like `client:visible` or `client:idle`) **(SSR Hydration)**: Despite its cool and flashy name, "SSR Hydration" is not that complicated: it just creates a static HTML skeleton first, and once the JS is ready, the engine takes over the DOM as if it had been there from the start. If you are particular about the visual transition—like ensuring there is no layout shift by pre-setting an image's height—you might want to take control to make the swap feel completely natural.
 
@@ -86,7 +87,7 @@ const flexCol = (...args) => css({
 
 ## 🌗 Hybrid Styling (SSR + CSR)
 
-In Astro, Island components (`client:*`) get the best of both worlds.
+In Astro, Island components (`client:load` and others) get the best of both worlds.
 
 ### How it works
 
