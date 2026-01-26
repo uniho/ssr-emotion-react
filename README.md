@@ -281,7 +281,7 @@ export const sx = (props, style, ...values) => {
 sx._factory = (genCSS) => {
   const f = (props, ...styles) => sx(props || {}, genCSS, ...styles);
   f.css = (...styles) => f({}, ...styles); // style only
-  f.curry = (props) => (...values) => f(props || {}, ...values); // currying
+  // f.curry = (props) => (...values) => f(props || {}, ...values); // currying
   return f;
 }
 
