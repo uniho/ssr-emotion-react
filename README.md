@@ -35,9 +35,9 @@ Now, you can use not only Astro components (`.astro`) but also React JSX compone
 
 > **Note:** React JSX components in Astro Islands
 >
-> * **No directive (Server Only)**: Rendered as just static HTML tags. It results in zero client-side JavaScript. (I used to think there wasn't much point in writing static content in JSX components instead of just using Astro components. It seemed like standard Astro components was more than enough. **However, I've realized one major advantage:** SSR Emotion — the ultimate SSR Zero-Runtime CSS-in-JS solution, seamlessly integrated with Astro. By using React JSX components, your styles are automatically extracted into static CSS during the build process. This means you can enjoy the full power of CSS-in-JS while still shipping zero bytes of JS to the browser. In this regard, it's a significant upgrade over standard Astro components.)
+> * **No directive (SSR Only)**: Rendered as just static HTML tags. It results in zero client-side JavaScript. (I used to think there wasn't much point in writing static content in JSX components instead of just using Astro components. It seemed like standard Astro components was more than enough. **However, I've realized one major advantage:** SSR Emotion — the ultimate SSR Zero-Runtime CSS-in-JS solution, seamlessly integrated with Astro. By using React JSX components, your styles are automatically extracted into static CSS during the build process. This means you can enjoy the full power of CSS-in-JS while still shipping zero bytes of JS to the browser. In this regard, it's a significant upgrade over standard Astro components.)
 >
-> * `client:only="react"` **(Client Only)**: As you know, this is the standard mode where Emotion is used, and this plugin does nothing. It skips server-side rendering and runs entirely in the browser.
+> * `client:only="react"` **(CSR Only)**: As you know, this is the standard mode where Emotion is used, and this plugin does nothing. It skips server-side rendering and runs entirely in the browser.
 >
 > * `client:load`(and others like `client:visible` or `client:idle`) **(SSR Hydration)**: Despite its cool and flashy name, "SSR Hydration" is not that complicated: it just creates a static HTML skeleton first, and once the JS is ready, the engine takes over the DOM as if it had been there from the start. If you are particular about the visual transition—like ensuring there is no layout shift by pre-setting an image's height—you might want to take control to make the swap feel completely natural.
 
@@ -49,17 +49,15 @@ This plugin wasn't originally built for React. It was first conceived as a core 
 While developing [Potate](https://github.com/uniho/potate), I discovered a way to handle SSR [Emotion](https://emotion.sh/docs/@emotion/css) and Hydration that felt more "correct" for the Astro era: **The Full DOM Replacement strategy.** It worked so flawlessly in Potate that I decided to bring this lineage back to the "ancestor," React. By applying Potate's philosophy to React, we've eliminated the historical complexities of Emotion SSR and the fragility of standard React hydration.
 
 
-## 💎 The Result
+## 💎 SSR Only
+
+You don't need to learn any special properties or complex setups. It just works with the [Emotion `css()` function](https://emotion.sh/docs/@emotion/css). It feels completely natural, even in Astro's **"No directive" (SSR Only)** mode.
 
 * **Zero Runtime by default:** No `Emotion` library is shipped to the browser. It delivers a pure Zero-JS experience.
 * **Familiar DX:** Use the full expressive power of the [Emotion `css()` function](https://emotion.sh/docs/@emotion/css) that you already know.
 * **Decoupled Asset Delivery:** Styles are moved to separate `.css` files to allow for flexible cache strategies. By using unique filenames (cache busting), we ensure that updates are immediately reflected even when long-term caching is enabled on the server.
-* **Hydration Stability:** No overhead for style re-calculation. Interactive Islands remain stable and fully dynamic without visual flickering during the hydration process.
 
-
-## 🛠 How it looks
-
-In SSR Emotion, you don't need to learn any special properties or complex setups. It just works with the [Emotion `css()` function](https://emotion.sh/docs/@emotion/css). It feels completely natural, even in Astro's **"No directive" (Server Only)** mode.
+### Example: SRR Only Styling
 
 While you can use [`css()`](https://emotion.sh/docs/@emotion/css) directly, you can also create reusable functions like `flexCol()` (which we call **"The Patterns"**).
 
@@ -84,10 +82,27 @@ const flexCol = (...args) => css({
 
 ```
 
+```astro
+---
+// src/pages/index.astro
 
-## 🌗 Hybrid Styling (SSR + CSR)
+import Layout from '../layouts/Layout.astro'
+import StaticBox from '../components/StaticBox'
+---
+
+<Layout>
+  <StaticBox />
+</Layout>
+
+```
+
+## 🌗 SSR Hydration (SSR + CSR)
 
 In Astro, Island components (`client:load` and others) get the best of both worlds.
+
+* **Hydration Stability:** No overhead for style re-calculation. Interactive Islands remain stable and fully dynamic without visual flickering during the hydration process.
+* **Unlimited Flexibility:** Need to change colors based on user input or mouse position? Just pass the props/state to css() like you always do.
+* **Zero Learning Curve:** If you know how to use useEffect and Emotion, you already know how to build dynamic Islands with React.
 
 ### How it works
 
@@ -107,11 +122,11 @@ You can easily change styles when the component "wakes up" in the browser:
 // src/components/InteractiveBox.jsx
 
 export default props => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    setIsLoaded(true); // Triggers once JS is active
-  }, []);
+    setIsLoaded(true) // Triggers once JS is active
+  }, [])
 
   return (
     <div class={css({
@@ -122,8 +137,8 @@ export default props => {
     })}>
       {isLoaded ? 'I am Interactive!' : 'I am Static HTML'}
     </div>
-  );
-};
+  )
+}
 
 ```
 
@@ -131,9 +146,9 @@ export default props => {
 ---
 // src/pages/index.astro
 
-import Layout from '../layouts/Layout.astro';
-import StaticBox from '../components/StaticBox';
-import InteractiveBox from '../components/InteractiveBox';
+import Layout from '../layouts/Layout.astro'
+import StaticBox from '../components/StaticBox'
+import InteractiveBox from '../components/InteractiveBox'
 ---
 
 <Layout>
@@ -142,13 +157,6 @@ import InteractiveBox from '../components/InteractiveBox';
 </Layout>
 
 ```
-
-### Key Benefits
-
-* **No FOUC (Flash of Unstyled Content):** Since the "Server Side" style is already in the static CSS, there's no flickering.
-* **Unlimited Flexibility:** Need to change colors based on user input or mouse position? Just pass the props/state to css() like you always do.
-* **Zero Learning Curve:** If you know how to use useEffect and Emotion, you already know how to build dynamic Islands with React.
-
 
 ## 🛠 The Patterns 
 
