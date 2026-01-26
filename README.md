@@ -57,7 +57,7 @@ You don't need to learn any special properties or complex setups. It just works 
 * **Familiar DX:** Use the full expressive power of the [Emotion `css()` function](https://emotion.sh/docs/@emotion/css) that you already know.
 * **Decoupled Asset Delivery:** Styles are moved to separate `.css` files to allow for flexible cache strategies. By using unique filenames (cache busting), we ensure that updates are immediately reflected even when long-term caching is enabled on the server.
 
-### Example: SRR Only Styling
+### Example: SSR Only Styling
 
 While you can use [`css()`](https://emotion.sh/docs/@emotion/css) directly, you can also create reusable functions like `flexCol()` (which we call **"The Patterns"**).
 
