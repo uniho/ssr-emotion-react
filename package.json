@@ -44,8 +44,7 @@
   },
   "dependencies": {
     "@emotion/css": "^11.13.5",
-    "@emotion/server": "^11.11.0",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@emotion/server": "^11.11.0"
   },
   "devDependencies": {
     "esbuild": "^0.27.2",
@@ -56,6 +55,7 @@
   "peerDependencies": {
     "astro": ">=5.0.0",
     "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react-dom": ">=18.0.0",
+    "@vitejs/plugin-react": ">=5.0.0"
   }
 }
