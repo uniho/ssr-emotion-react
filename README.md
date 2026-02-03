@@ -22,6 +22,8 @@ npm install ssr-emotion-react
 
 Add the integration in `astro.config.mjs`.
 
+> **Notes:** If you are also using `@astrojs/react`, you must remove it or place `ssrEmotion()` before `react()` in the `integrations` array. This ensures that `ssr-emotion-react` can correctly handle component rendering and extract styles.
+
 ```js
 import { defineConfig } from 'astro/config';
 import ssrEmotion from 'ssr-emotion-react/astro';
