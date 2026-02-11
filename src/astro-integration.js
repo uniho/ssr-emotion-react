@@ -1,5 +1,7 @@
 // astro-integration.js
 
+import { createRequire } from 'node:module';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import buildDone from './astro-build-done.js';
 
 export default function() {
@@ -21,8 +23,21 @@ export default function() {
               integrations: [react()]
             });
           } catch (e) {
-            logger.error('\n[ssr-emotion-react] ❌ @astrojs/react is not installed.\nThis integration requires @astrojs/react to function correctly.\nPlease install it: npm install @astrojs/react\n');
-            return;
+            try {
+              const require = createRequire(fileURLToPath(new URL('./package.json', config.root)));
+              const reactPath = require.resolve('@astrojs/react');
+              const react = (await import(pathToFileURL(reactPath).href)).default;
+              updateConfig({
+                integrations: [react()]
+              });
+            } catch (err) {
+              if (err.code === 'MODULE_NOT_FOUND') {
+                logger.error('\n[ssr-emotion-react] ❌ @astrojs/react is not installed.\nThis integration requires @astrojs/react to function correctly.\nPlease install it: npm install @astrojs/react\n');
+              } else {
+                logger.error('\n[ssr-emotion-react] ❌ @astrojs/react is installed but failed to load automatically.\nPlease add the react() integration to your astro.config manually.\n');
+              }
+              return;
+            }
           }
         } else {
           const selfIndex = config.integrations.findIndex((i) => i.name === 'ssr-emotion-react');
@@ -49,7 +64,9 @@ export default function() {
         });
       },
 
-      'astro:build:done': async (options) => await buildDone(options, saveConfig),
+      'astro:build:done': async (options) => {
+        if (saveConfig) await buildDone(options, saveConfig);
+      },
     },
   };
 }
